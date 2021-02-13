@@ -1,8 +1,5 @@
-package main;
+package main.renderer;
 
-import main.render.Block;
-import main.render.Display;
-import main.render.KeyHandler;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -11,7 +8,8 @@ import org.lwjgl.glfw.GLFW;
 import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 
-import static main.render.Block.drawCube;
+import static main.renderer.Block.drawCube;
+import static main.renderer.RendererGenerateChunks.genChunksForRenderer;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorPos;
 import static org.lwjgl.opengl.GL11.*;
@@ -25,36 +23,10 @@ public class Main {
         Display display = new Display(1600, 864, "gamers");
         display.createWindow(new KeyHandler());
 
-        // GENERATE BLOCKS
-        int chunkX = 0;
-        int chunkZ = 0;
+        // set camera to sea level
+        pos.y = 64;
 
-        BiomesBase[] biomesForGeneration = new BiomesBase[256];
-        BiomeGeneration biomeGeneration = new BiomeGeneration(SEED);
-        biomeGeneration.loadBiomes(biomesForGeneration, chunkX * 16, chunkZ * 16, 16, 16);
-
-        GenerateChunk generateChunk = new GenerateChunk(SEED);
-        byte[] chunk = generateChunk.provideChunk(0, 0, true, biomeGeneration, biomesForGeneration);
-
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                int index = x << 11 | z << 7;
-                Vector3f color = colorFromBlockType((byte) 1);
-                Vector3f pos = new Vector3f(x, chunk[index >> 7], z);
-                blocks.add(new Block(pos, color));
-//                for (int y = 0; y < 128; y++) {
-//                    int index = x << 11 | z << 7 | y;
-//                    if (index >= 32768) {
-//                        continue;
-//                    }
-//                    if (chunk[index] != 0) {
-//                        Vector3f color = colorFromBlockType(chunk[index]);
-//                        Vector3f pos = new Vector3f(x*2, y*2, z*2);
-//                        blocks.add(new Block(pos, color));
-//                    }
-//                }
-            }
-        }
+        genChunksForRenderer(blocks, SEED);
 
         // MAIN LOOP
         while(!GLFW.glfwWindowShouldClose(display.getWindowID())) {
@@ -72,7 +44,7 @@ public class Main {
             if (isMovingDown)  { vel.y -= speed; }
 
             // clear buffer
-            glClearColor(0, 0, 0, 0);
+            glClearColor(0.723F, 0.887F, 1.0F, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glEnable(GL_DEPTH_TEST);
             // begin rendering

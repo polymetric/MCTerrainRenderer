@@ -1,6 +1,5 @@
-package main.render;
+package main.renderer;
 
-import main.Main;
 import org.lwjgl.glfw.GLFWKeyCallbackI;
 
 import static org.lwjgl.glfw.GLFW.*;
