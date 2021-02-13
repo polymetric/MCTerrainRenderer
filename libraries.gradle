@@ -1,0 +1,27 @@
+
+ext {
+    //versions
+    groovyVersion = "2.4.5"
+    junitVersion = "4.12"
+    slf4jVersion = "1.7.7"
+    guavaVersion =  "17.0"
+    jsr305Version = "2.0.3"
+    logbackVersion = "1.1.2"
+    lwjglVersion = "2.9.3"
+
+    libraries = [
+            groovy: "org.codehaus.groovy:groovy-all:$groovyVersion",
+
+            junit: "junit:junit:$junitVersion",
+            jsr305: "com.google.code.findbugs:jsr305:$jsr305Version",
+
+            lwjgl: "org.lwjgl.lwjgl:lwjgl:$lwjglVersion",
+            lwjgl_util: "org.lwjgl.lwjgl:lwjgl-util:$lwjglVersion",
+
+            //logging
+            slf4j: "org.slf4j:slf4j-api:$slf4jVersion",
+            logback: "ch.qos.logback:logback-classic:$logbackVersion",
+
+            guava: "com.google.guava:guava:$guavaVersion",
+    ]
+}

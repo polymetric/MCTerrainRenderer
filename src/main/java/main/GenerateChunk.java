@@ -76,8 +76,8 @@ public class GenerateChunk {
         if (NoiseColumn == null) {
             NoiseColumn = new double[5 * 17 * 5];
         }
-        double d = 684.41200000000003D;
-        double d1 = 684.41200000000003D;
+        double d = 684.412D;
+        double d1 = 684.412D;
         double[] temperature = biomeGenerationInstance.temperature;
         double[] humidity = biomeGenerationInstance.humidity;
         surfaceNoise = scale.generateFixedNoise(surfaceNoise, x, z, 5, 5, 1.121D, 1.121D);
