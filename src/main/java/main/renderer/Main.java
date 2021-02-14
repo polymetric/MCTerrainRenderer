@@ -7,27 +7,28 @@ import org.lwjgl.glfw.GLFW;
 
 import java.nio.DoubleBuffer;
 import java.util.ArrayList;
+import java.util.Random;
 
-import static main.renderer.Block.drawCube;
-import static main.renderer.RendererGenerateChunks.genChunksForRenderer;
+import static main.renderer.Block.*;
+import static main.renderer.RendererGenerateChunks.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.glfwSetCursorPos;
 import static org.lwjgl.opengl.GL11.*;
 
+import static main.renderer.Seeds.*;
+
 public class Main {
-    static final long SEED = 3257840388504953787L;
+//    static final long SEED = 3257840388504953787L;
+//    static final long SEED = 5L;
 
     public static void main(String[] args) throws Exception {
-        java.util.Random rand = new java.util.Random();
-
         Display display = new Display(1600, 864, "gamers");
         display.createWindow(new KeyHandler());
 
         // set camera to sea level
         pos.y = 64;
 
-        genChunksForRenderer(blocks, SEED);
-
+        genChunksForRenderer(chunks, seeds[seedIndex % seeds.length]);
+        loadCubeModel();
         // MAIN LOOP
         while(!GLFW.glfwWindowShouldClose(display.getWindowID())) {
             // tick
@@ -36,15 +37,18 @@ public class Main {
             pos.add(vel);
             vel.mul(0.90F);
 
-            if (isMovingFwd)   { moveHorizAngle(yaw); }
-            if (isMovingBwd)   { moveHorizAngle(yaw + 180); }
-            if (isMovingRight) { moveHorizAngle(yaw + 90); }
-            if (isMovingLeft)  { moveHorizAngle(yaw - 90); }
-            if (isMovingUp)    { vel.y += speed; }
-            if (isMovingDown)  { vel.y -= speed; }
+            if (moveEnabled) {
+                if (isMovingFwd) { moveHorizAngle(yaw); }
+                if (isMovingBwd) { moveHorizAngle(yaw + 180); }
+                if (isMovingRight) { moveHorizAngle(yaw + 90); }
+                if (isMovingLeft) { moveHorizAngle(yaw - 90); }
+                if (isMovingUp) { vel.y += speed; }
+                if (isMovingDown) { vel.y -= speed; }
+            }
 
             // clear buffer
             glClearColor(0.723F, 0.887F, 1.0F, 0);
+//            glClearColor(0, 0, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glEnable(GL_DEPTH_TEST);
             // begin rendering
@@ -69,22 +73,21 @@ public class Main {
 
             // draw
             glMatrixMode(GL_MODELVIEW);
-            drawCube(1, 1, 1);
-            for (Block block : blocks) {
-                glPushMatrix();
-                glTranslatef(block.pos.x, block.pos.y, block.pos.z);
-                glColor3f(block.color.x, block.color.y, block.color.z);
-                drawCube(1, 1, 1);
-                glPopMatrix();
+            for (Chunk chunk : chunks) {
+                chunk.renderChunk();
             }
 
             // done rendering
+            int err;
+            while ((err = glGetError()) != GL_NO_ERROR) {
+                System.err.println(err);
+            }
             glfwSwapBuffers(display.getWindowID());
             glfwPollEvents();
         }
     }
 
-    public static ArrayList<Block> blocks = new ArrayList<Block>();
+    public static ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 
     public static boolean isMovingLeft = false;
     public static boolean isMovingRight = false;
@@ -110,8 +113,13 @@ public class Main {
 
     public static boolean paused = true;
 
+    public static int seedIndex = 0;
+
+    public static boolean mouseEnabled = true;
+    public static boolean moveEnabled = true;
+
     public static void handleMouse(Display display) {
-        if (paused) {
+        if (paused || !mouseEnabled) {
             display.enableCursor();
             return;
         }
@@ -147,16 +155,5 @@ public class Main {
         angle = angle - 90;
         vel.x += speed * Math.cos(Math.toRadians(angle));
         vel.z += speed * Math.sin(Math.toRadians(angle));
-    }
-
-    public static Vector3f colorFromBlockType(byte b) {
-        switch (b) {
-            case 3:
-                return new Vector3f(0.551F, 0.21557324F, 0.079895F);
-            case 1:
-                return new Vector3f(0.583F, 0.583F, 0.583F);
-            default:
-                return new Vector3f(0.49981984F, 0.15964F, 0.52F);
-        }
     }
 }
