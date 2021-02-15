@@ -14,6 +14,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import static main.renderer.Seeds.*;
+import static java.lang.Math.*;
 
 public class Main {
 //    static final long SEED = 3257840388504953787L;
@@ -31,28 +32,44 @@ public class Main {
         // debug
 //        Chunk a = new Chunk(level, 0, 0);
 //        level.addChunk(a);
-//        a.blocks[Chunk.getIndexOf(14, 64, 0)] = 1;
-//        a.blocks[Chunk.getIndexOf(15, 64, 0)] = 1;
+//        a.blocks[Chunk.getIndexOf(0, 64, 14)] = 1;
+//        a.blocks[Chunk.getIndexOf(0, 64, 15)] = 1;
+//        a.blocks[Chunk.getIndexOf(1, 64, 15)] = 1;
 //        System.out.println();
 //
-//        Chunk b = new Chunk(level, 1, 0);
+//        Chunk b = new Chunk(level, 0, 1);
 //        level.addChunk(b);
 //        b.blocks[Chunk.getIndexOf(0, 64, 0)] = 2;
 //
+//        Chunk c = new Chunk(level, -1, 0);
+//        level.addChunk(c);
+//        c.blocks[Chunk.getIndexOf(15, 64, 15)] = 2;
+//
 //        a.rebuild();
 //        b.rebuild();
+//        c.rebuild();
 //
 //        System.out.println("test");
-//        System.out.println(level.blockAt(16, 64, 0));
-//        System.out.println(b.blockAt(0, 64, 0));
+//        System.out.println(level.blockAt(-1, 64, 15));
+//        System.out.println(c.blockAt(15, 64, 15));
 
         // MAIN LOOP
         while(!GLFW.glfwWindowShouldClose(display.getWindowID())) {
             // tick
+            glfwPollEvents();
+            if (updateSeed) {
+                updateSeed = false;
+                System.out.printf("switching to seed %15d\n", seeds[seedIndex % seeds.length]);
+                level.clear();
+                genChunksForRenderer(level, seeds[seedIndex % seeds.length]);
+            }
+
             handleMouse(display);
 
             pos.add(vel);
             vel.mul(0.90F);
+
+//            System.out.printf("cam pos %4f %4f %4f\n", pos.x, pos.y, pos.z);
 
             if (moveEnabled) {
                 if (isMovingFwd) { moveHorizAngle(yaw); }
@@ -92,7 +109,6 @@ public class Main {
                 System.err.println(err);
             }
             glfwSwapBuffers(display.getWindowID());
-            glfwPollEvents();
         }
     }
 
@@ -123,6 +139,7 @@ public class Main {
     public static boolean paused = true;
 
     public static int seedIndex = 0;
+    public static boolean updateSeed = false;
 
     public static boolean mouseEnabled = true;
     public static boolean moveEnabled = true;
@@ -164,5 +181,18 @@ public class Main {
         angle = angle - 90;
         vel.x += speed * Math.cos(Math.toRadians(angle));
         vel.z += speed * Math.sin(Math.toRadians(angle));
+    }
+
+    public static void nextSeed() {
+        seedIndex--;
+        if (seedIndex < 0) {
+            seedIndex = seeds.length;
+        }
+        updateSeed = true;
+    }
+
+    public static void prevSeed() {
+        seedIndex++;
+        updateSeed = true;
     }
 }

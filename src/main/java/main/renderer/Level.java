@@ -1,5 +1,7 @@
 package main.renderer;
 
+import static java.lang.Math.*;
+
 public class Level {
     Chunk[] chunks = new Chunk[32*32];
 
@@ -9,7 +11,7 @@ public class Level {
 
     public byte blockAt(int x, int y, int z) {
 //        System.out.printf("blockat called with xyz %4d %4d %4d\n", x, y, z);
-        Chunk chunk = chunks[chunkIndex(x/16, z/16)];
+        Chunk chunk = chunks[chunkIndex(floorDiv(x, 16), floorDiv(z, 16))];
         if (chunk == null) {
             return 0;
         } else {
@@ -33,5 +35,9 @@ public class Level {
                 chunk.render();
             }
         }
+    }
+
+    public void clear() {
+        chunks = new Chunk[32*32];
     }
 }

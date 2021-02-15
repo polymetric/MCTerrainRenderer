@@ -21,7 +21,7 @@ public class Tessellator {
 
     public void flush() {
         if (vertexBuffer.position() == 0) {
-            System.out.println("verex countererereere: " + vertexCount);
+            System.err.println("verex countererereere: " + vertexCount);
             return;
         }
         vertexBuffer.flip();
@@ -55,7 +55,7 @@ public class Tessellator {
         }
         vertexCount++;
         if (vertexCount > 100000) {
-            flush();
+//            flush();
         }
     }
 
