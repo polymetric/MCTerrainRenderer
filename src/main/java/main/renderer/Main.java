@@ -6,8 +6,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 
 import java.nio.DoubleBuffer;
-import java.util.ArrayList;
-import java.util.Random;
 
 import static main.renderer.RendererGenerateChunks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -20,6 +18,8 @@ public class Main {
 //    static final long SEED = 3257840388504953787L;
 //    static final long SEED = 5L;
 
+    static final int RADIUS = 8;
+
     public static void main(String[] args) throws Exception {
         Display display = new Display(1600, 864, "gamers");
         display.createWindow(new KeyHandler());
@@ -27,7 +27,7 @@ public class Main {
         // set camera to sea level
         pos.y = 64 + 1.62F;
 
-        genChunksForRenderer(level, seeds[seedIndex % seeds.length]);
+        reloadChunks();
 
         // debug
 //        Chunk a = new Chunk(level, 0, 0);
@@ -61,7 +61,8 @@ public class Main {
                 updateSeed = false;
                 System.out.printf("switching to seed %15d\n", seeds[seedIndex % seeds.length]);
                 level.clear();
-                genChunksForRenderer(level, seeds[seedIndex % seeds.length]);
+                seed = seeds[seedIndex % seeds.length];
+                reloadChunks();
             }
 
 //            System.out.printf("%6.3f %6.3f %6.3f %6.3f %6.3f\n", pos.x, pos.y, pos.z, pitch, yaw);
@@ -70,8 +71,6 @@ public class Main {
 
             pos.add(vel);
             vel.mul(0.90F);
-
-//            System.out.printf("cam pos %4f %4f %4f\n", pos.x, pos.y, pos.z);
 
             if (moveEnabled) {
                 if (isMovingFwd) { moveHorizAngle(yaw); }
@@ -142,6 +141,7 @@ public class Main {
     public static boolean paused = true;
 
     public static int seedIndex = 0;
+    public static long seed = seeds[seedIndex];
     public static boolean updateSeed = false;
 
     public static boolean mouseEnabled = true;
@@ -186,7 +186,7 @@ public class Main {
         vel.z += speed * Math.sin(Math.toRadians(angle));
     }
 
-    public static void nextSeed() {
+    public static void prevSeed() {
         seedIndex--;
         if (seedIndex < 0) {
             seedIndex = seeds.length;
@@ -194,8 +194,14 @@ public class Main {
         updateSeed = true;
     }
 
-    public static void prevSeed() {
+    public static void nextSeed() {
         seedIndex++;
+        System.out.println(seedIndex);
         updateSeed = true;
+    }
+
+    public static void reloadChunks() {
+        level.clear();
+        genChunksForRenderer(level, seeds[seedIndex % seeds.length], RADIUS, floorDiv((int) pos.x, 16), floorDiv((int) pos.z, 16));
     }
 }
