@@ -9,7 +9,6 @@ import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static main.renderer.Block.*;
 import static main.renderer.RendererGenerateChunks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -25,10 +24,15 @@ public class Main {
         display.createWindow(new KeyHandler());
 
         // set camera to sea level
-        pos.y = 64;
+        pos.y = 64 + 1.62F;
 
         genChunksForRenderer(chunks, seeds[seedIndex % seeds.length]);
-        loadCubeModel();
+//        Chunk e = new Chunk(0, 0);
+//        e.blocks[Chunk.getIndexOf(0, 64, 0)] = 1;
+//        e.blocks[Chunk.getIndexOf(1, 64, 0)] = 1;
+//        chunks.add(e);
+//        e.rebuild();
+
         // MAIN LOOP
         while(!GLFW.glfwWindowShouldClose(display.getWindowID())) {
             // tick
@@ -48,7 +52,6 @@ public class Main {
 
             // clear buffer
             glClearColor(0.723F, 0.887F, 1.0F, 0);
-//            glClearColor(0, 0, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glEnable(GL_DEPTH_TEST);
             // begin rendering
@@ -65,16 +68,11 @@ public class Main {
             glTranslatef(-pos.x, -pos.y, -pos.z);
 
             // lighting
-            glEnable(GL_LIGHTING);
-            glEnable(GL_COLOR_MATERIAL);
-            glEnable(GL_LIGHT0);
-            float[] temp1 = { .5f, 1, .25f, 0 };
-            glLightfv(GL_LIGHT0, GL_POSITION, temp1);
 
             // draw
             glMatrixMode(GL_MODELVIEW);
             for (Chunk chunk : chunks) {
-                chunk.renderChunk();
+                chunk.render();
             }
 
             // done rendering
