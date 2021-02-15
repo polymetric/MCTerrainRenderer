@@ -90,7 +90,7 @@ public class Block {
             case 12:
                 return new Vector3f(0.913F, 0.901F, 0.632F);
             default:
-                System.out.printf("unknown block type %d\n", b);
+//                System.out.printf("unknown block type %d\n", b);
                 return new Vector3f(0.500F, 0.160F, 0.520F);
         }
     }

@@ -7,10 +7,10 @@ import main.GenerateChunk;
 import java.util.ArrayList;
 
 public class RendererGenerateChunks {
-    public static void genChunksForRenderer(Level level, long seed, int radius, int centerX, int centerY) {
+    public static void genChunksForRenderer(Level level, long seed, int radius, int centerX, int centerZ) {
         // GENERATE BLOCKS
         for (int chunkX = centerX-radius; chunkX <= centerX+radius; chunkX++) {
-            for (int chunkZ = centerX-radius; chunkZ <= centerX+radius; chunkZ++) {
+            for (int chunkZ = centerZ-radius; chunkZ <= centerZ+radius; chunkZ++) {
                 BiomesBase[] biomesForGeneration = new BiomesBase[256];
                 BiomeGeneration biomeGeneration = new BiomeGeneration(seed);
                 biomeGeneration.loadBiomes(biomesForGeneration, chunkX * 16, chunkZ * 16, 16, 16);
@@ -24,7 +24,7 @@ public class RendererGenerateChunks {
             }
         }
         for (int chunkX = centerX-radius; chunkX <= centerX+radius; chunkX++) {
-            for (int chunkZ = centerX-radius; chunkZ <= centerX+radius; chunkZ++) {
+            for (int chunkZ = centerZ-radius; chunkZ <= centerZ+radius; chunkZ++) {
                 level.chunks[Level.chunkIndex(chunkX, chunkZ)].rebuild();
             }
         }

@@ -18,7 +18,7 @@ public class Main {
 //    static final long SEED = 3257840388504953787L;
 //    static final long SEED = 5L;
 
-    static final int RADIUS = 8;
+    static final int RADIUS = 12;
 
     public static void main(String[] args) throws Exception {
         Display display = new Display(1600, 864, "gamers");
@@ -26,6 +26,16 @@ public class Main {
 
         // set camera to sea level
         pos.y = 64 + 1.62F;
+
+        pos.x = 147.13F;
+        pos.y = 80.36F;
+        pos.z = 206.06F;
+
+        yaw = -268.95F;
+        pitch = 47.55F;
+
+        mouseEnabled = false;
+        moveEnabled = false;
 
         reloadChunks();
 
@@ -202,6 +212,7 @@ public class Main {
 
     public static void reloadChunks() {
         level.clear();
+        System.out.printf("reloading chunks centered around %4d %4d\n", floorDiv((int) pos.x, 16), floorDiv((int) pos.z, 16));
         genChunksForRenderer(level, seeds[seedIndex % seeds.length], RADIUS, floorDiv((int) pos.x, 16), floorDiv((int) pos.z, 16));
     }
 }

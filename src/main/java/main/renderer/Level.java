@@ -3,10 +3,10 @@ package main.renderer;
 import static java.lang.Math.*;
 
 public class Level {
-    Chunk[] chunks = new Chunk[32*32];
+    Chunk[] chunks = new Chunk[256*256];
 
     public static int chunkIndex(int chunkX, int chunkY) {
-        return ((chunkX + 16) << 5) | (chunkY + 16);
+        return ((chunkX + 128) << 8) | (chunkY + 128);
     }
 
     public byte blockAt(int x, int y, int z) {
@@ -38,6 +38,6 @@ public class Level {
     }
 
     public void clear() {
-        chunks = new Chunk[32*32];
+        chunks = new Chunk[256*256];
     }
 }
