@@ -26,12 +26,25 @@ public class Main {
         // set camera to sea level
         pos.y = 64 + 1.62F;
 
-        genChunksForRenderer(chunks, seeds[seedIndex % seeds.length]);
-//        Chunk e = new Chunk(0, 0);
-//        e.blocks[Chunk.getIndexOf(0, 64, 0)] = 1;
-//        e.blocks[Chunk.getIndexOf(1, 64, 0)] = 1;
-//        chunks.add(e);
-//        e.rebuild();
+        genChunksForRenderer(level, seeds[seedIndex % seeds.length]);
+
+        // debug
+//        Chunk a = new Chunk(level, 0, 0);
+//        level.addChunk(a);
+//        a.blocks[Chunk.getIndexOf(14, 64, 0)] = 1;
+//        a.blocks[Chunk.getIndexOf(15, 64, 0)] = 1;
+//        System.out.println();
+//
+//        Chunk b = new Chunk(level, 1, 0);
+//        level.addChunk(b);
+//        b.blocks[Chunk.getIndexOf(0, 64, 0)] = 2;
+//
+//        a.rebuild();
+//        b.rebuild();
+//
+//        System.out.println("test");
+//        System.out.println(level.blockAt(16, 64, 0));
+//        System.out.println(b.blockAt(0, 64, 0));
 
         // MAIN LOOP
         while(!GLFW.glfwWindowShouldClose(display.getWindowID())) {
@@ -71,9 +84,7 @@ public class Main {
 
             // draw
             glMatrixMode(GL_MODELVIEW);
-            for (Chunk chunk : chunks) {
-                chunk.render();
-            }
+            level.render();
 
             // done rendering
             int err;
@@ -85,7 +96,7 @@ public class Main {
         }
     }
 
-    public static ArrayList<Chunk> chunks = new ArrayList<Chunk>();
+    public static Level level = new Level();
 
     public static boolean isMovingLeft = false;
     public static boolean isMovingRight = false;

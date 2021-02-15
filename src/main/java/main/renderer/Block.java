@@ -1,15 +1,11 @@
 package main.renderer;
 
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL11;
-
-import java.awt.*;
-import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL46.*;
 
 public class Block {
-    public static void render(Chunk chunk, Tessellator tessellator, byte type, int x, int y, int z) {
+    public static void render(Level level, Tessellator tessellator, byte type, int x, int y, int z) {
         float Xa = x + 0.0F;
         float Xb = x + 1.0F;
         float Ya = y + 0.0F;
@@ -19,7 +15,7 @@ public class Block {
         Vector3f baseColor = colorFromBlockType(type);
 
         // Yb - top
-        if (chunk.blockIsAir(x, y+1, z)) {
+        if (level.blockIsAir(x, y+1, z)) {
             tessellator.color(baseColor);
             tessellator.vertex(Xa, Yb, Za);
             tessellator.vertex(Xb, Yb, Za);
@@ -27,7 +23,7 @@ public class Block {
             tessellator.vertex(Xa, Yb, Zb);
         }
         // Xa - left
-        if (chunk.blockIsAir(x-1, y, z)) {
+        if (level.blockIsAir(x-1, y, z)) {
             Vector3f faceColor = new Vector3f(baseColor.x, baseColor.y, baseColor.z);
             faceColor.mul(.5F);
             tessellator.color(faceColor);
@@ -37,7 +33,7 @@ public class Block {
             tessellator.vertex(Xa, Ya, Zb);
         }
         // Xb - right
-        if (chunk.blockIsAir(x+1, y, z)) {
+        if (level.blockIsAir(x+1, y, z)) {
             Vector3f faceColor = new Vector3f(baseColor.x, baseColor.y, baseColor.z);
             faceColor.mul(.5F);
             tessellator.color(faceColor);
@@ -47,7 +43,7 @@ public class Block {
             tessellator.vertex(Xb, Ya, Zb);
         }
         // Za - front
-        if (chunk.blockIsAir(x, y, z-1)) {
+        if (level.blockIsAir(x, y, z-1)) {
             Vector3f faceColor = new Vector3f(baseColor.x, baseColor.y, baseColor.z);
             faceColor.mul(.25F);
             tessellator.color(faceColor);
@@ -57,7 +53,7 @@ public class Block {
             tessellator.vertex(Xb, Ya, Za);
         }
         // Zb - back
-        if (chunk.blockIsAir(x, y, z+1)) {
+        if (level.blockIsAir(x, y, z+1)) {
             Vector3f faceColor = new Vector3f(baseColor.x, baseColor.y, baseColor.z);
             faceColor.mul(.25F);
             tessellator.color(faceColor);
@@ -67,7 +63,7 @@ public class Block {
             tessellator.vertex(Xb, Ya, Zb);
         }
         // Ya - bottom
-        if (chunk.blockIsAir(x, y-1, z)) {
+        if (level.blockIsAir(x, y-1, z)) {
             Vector3f faceColor = new Vector3f(baseColor.x, baseColor.y, baseColor.z);
             faceColor.mul(.125F);
             tessellator.color(faceColor);
@@ -86,7 +82,15 @@ public class Block {
                 return new Vector3f(0.217F, 0.630F, 0.129F);
             case 3:
                 return new Vector3f(0.551F, 0.215F, 0.079F);
+            case 7:
+                return new Vector3f(0.150F, 0.156F, 0.189F);
+            case 8:
+            case 9:
+                return new Vector3f(0.147F, 0.229F, 0.661F);
+            case 12:
+                return new Vector3f(0.913F, 0.901F, 0.632F);
             default:
+                System.out.printf("unknown block type %d\n", b);
                 return new Vector3f(0.500F, 0.160F, 0.520F);
         }
     }
