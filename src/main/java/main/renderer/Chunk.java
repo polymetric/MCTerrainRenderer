@@ -19,7 +19,6 @@ public class Chunk {
     public void rebuild() {
         glNewList(renderList, GL_COMPILE);
         tessellator.clear();
-        long timeStart = System.nanoTime();
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 for (int y = 0; y < 128; y++) {
@@ -30,10 +29,7 @@ public class Chunk {
                 }
             }
         }
-        System.out.printf("block gen took %6.6fms\n", (System.nanoTime() - timeStart) / 1e6);
-        timeStart = System.nanoTime();
         tessellator.flush();
-        System.out.printf("flush took %6.6fms\n", (System.nanoTime() - timeStart) / 1e6);
         glEndList();
     }
 

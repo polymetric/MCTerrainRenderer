@@ -19,7 +19,6 @@ public class RendererGenerateChunks {
                 GenerateChunk generateChunk = new GenerateChunk(seed);
                 byte[] blocks = generateChunk.provideChunk(chunkX, chunkZ, false, biomeGeneration, biomesForGeneration);
 
-                System.out.printf("generating chunk %4d %4d\n", chunkX, chunkZ);
                 Chunk chunkObj = new Chunk(level, chunkX, chunkZ);
                 level.addChunk(chunkObj);
                 chunkObj.blocks = blocks;
