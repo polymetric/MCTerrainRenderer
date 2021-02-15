@@ -64,6 +64,8 @@ public class Main {
                 genChunksForRenderer(level, seeds[seedIndex % seeds.length]);
             }
 
+//            System.out.printf("%6.3f %6.3f %6.3f %6.3f %6.3f\n", pos.x, pos.y, pos.z, pitch, yaw);
+
             handleMouse(display);
 
             pos.add(vel);
@@ -84,6 +86,7 @@ public class Main {
             glClearColor(0.723F, 0.887F, 1.0F, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glEnable(GL_DEPTH_TEST);
+            glEnable(GL_CULL_FACE);
             // begin rendering
 
             // camera

@@ -18,9 +18,9 @@ public class Block {
         if (level.blockIsAir(x, y+1, z)) {
             tessellator.color(baseColor);
             tessellator.vertex(Xa, Yb, Za);
-            tessellator.vertex(Xb, Yb, Za);
-            tessellator.vertex(Xb, Yb, Zb);
             tessellator.vertex(Xa, Yb, Zb);
+            tessellator.vertex(Xb, Yb, Zb);
+            tessellator.vertex(Xb, Yb, Za);
         }
         // Xa - left
         if (level.blockIsAir(x-1, y, z)) {
@@ -28,9 +28,9 @@ public class Block {
             faceColor.mul(.5F);
             tessellator.color(faceColor);
             tessellator.vertex(Xa, Ya, Za);
-            tessellator.vertex(Xa, Yb, Za);
-            tessellator.vertex(Xa, Yb, Zb);
             tessellator.vertex(Xa, Ya, Zb);
+            tessellator.vertex(Xa, Yb, Zb);
+            tessellator.vertex(Xa, Yb, Za);
         }
         // Xb - right
         if (level.blockIsAir(x+1, y, z)) {
@@ -58,9 +58,9 @@ public class Block {
             faceColor.mul(.25F);
             tessellator.color(faceColor);
             tessellator.vertex(Xa, Ya, Zb);
-            tessellator.vertex(Xa, Yb, Zb);
-            tessellator.vertex(Xb, Yb, Zb);
             tessellator.vertex(Xb, Ya, Zb);
+            tessellator.vertex(Xb, Yb, Zb);
+            tessellator.vertex(Xa, Yb, Zb);
         }
         // Ya - bottom
         if (level.blockIsAir(x, y-1, z)) {
