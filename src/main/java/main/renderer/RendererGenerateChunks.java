@@ -1,10 +1,8 @@
 package main.renderer;
 
-import main.BiomeGeneration;
-import main.BiomesBase;
-import main.GenerateChunk;
-
-import java.util.ArrayList;
+import main.b18.WorldChunkManager;
+import main.b18.biomes.BiomeGenBase;
+import main.b18.ChunkProviderGenerate;
 
 public class RendererGenerateChunks {
     public static void genChunksForRenderer(Level level, long seed, int radius, int centerX, int centerZ) {
@@ -13,12 +11,12 @@ public class RendererGenerateChunks {
         long timeStart = System.nanoTime();
         for (int chunkX = centerX-radius; chunkX <= centerX+radius; chunkX++) {
             for (int chunkZ = centerZ-radius; chunkZ <= centerZ+radius; chunkZ++) {
-                BiomesBase[] biomesForGeneration = new BiomesBase[256];
-                BiomeGeneration biomeGeneration = new BiomeGeneration(seed);
-                biomeGeneration.loadBiomes(biomesForGeneration, chunkX * 16, chunkZ * 16, 16, 16);
+                BiomeGenBase[] biomesForGeneration = new BiomeGenBase[256];
+//                biomeGeneration.loadBiomes(biomesForGeneration, chunkX * 16, chunkZ * 16, 16, 16);
+                WorldChunkManager worldChunkManager = new WorldChunkManager(seed);
 
-                GenerateChunk generateChunk = new GenerateChunk(seed);
-                byte[] blocks = generateChunk.provideChunk(chunkX, chunkZ, false, biomeGeneration, biomesForGeneration);
+                ChunkProviderGenerate chunkProvider = new ChunkProviderGenerate(seed, worldChunkManager);
+                byte[] blocks = chunkProvider.provideChunk(chunkX, chunkZ);
 
                 Chunk chunkObj = new Chunk(level, chunkX, chunkZ);
                 level.addChunk(chunkObj);

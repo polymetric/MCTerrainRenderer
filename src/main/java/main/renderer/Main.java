@@ -27,15 +27,15 @@ public class Main {
         // set camera to sea level
         pos.y = 64 + 1.62F;
 
-        pos.x = 147.13F;
-        pos.y = 80.36F;
-        pos.z = 206.06F;
-
-        yaw = -268.95F;
-        pitch = 47.55F;
-
-        mouseEnabled = false;
-        moveEnabled = false;
+//        pos.x = 147.13F;
+//        pos.y = 80.36F;
+//        pos.z = 206.06F;
+//
+//        yaw = -268.95F;
+//        pitch = 47.55F;
+//
+//        mouseEnabled = false;
+//        moveEnabled = false;
 
         reloadChunks();
 
@@ -69,7 +69,6 @@ public class Main {
             glfwPollEvents();
             if (updateSeed) {
                 updateSeed = false;
-                System.out.printf("switching to seed %15d\n", seeds[seedIndex % seeds.length]);
                 level.clear();
                 seed = seeds[seedIndex % seeds.length];
                 reloadChunks();
@@ -212,6 +211,7 @@ public class Main {
 
     public static void reloadChunks() {
         level.clear();
+        System.out.printf("loading seed %15d\n", seeds[seedIndex % seeds.length]);
         System.out.printf("reloading chunks centered around %4d %4d\n", floorDiv((int) pos.x, 16), floorDiv((int) pos.z, 16));
         genChunksForRenderer(level, seeds[seedIndex % seeds.length], RADIUS, floorDiv((int) pos.x, 16), floorDiv((int) pos.z, 16));
     }
