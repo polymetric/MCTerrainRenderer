@@ -1,5 +1,6 @@
 package main.renderer;
 
+import main.terrainchecker.TreeSeedTerrainChecker;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -17,92 +18,6 @@ import static java.lang.Math.*;
 public class Main {
 //    static final long SEED = 3257840388504953787L;
 //    static final long SEED = 5L;
-
-    static final int[][] referenceBlocks = {
-            {  142,     71,    195 },
-            {  142,     71,    196 },
-            {  142,     71,    197 },
-            {  142,     71,    203 },
-            {  142,     71,    204 },
-            {  142,     71,    205 },
-            {  142,     71,    206 },
-            {  142,     71,    207 },
-            {  142,     71,    208 },
-            {  142,     71,    209 },
-            {  142,     70,    210 },
-            {  142,     70,    211 },
-            {  142,     70,    212 },
-            {  142,     70,    213 },
-            {  142,     70,    214 },
-            {  143,     71,    194 },
-            {  143,     71,    195 },
-            {  143,     71,    196 },
-            {  143,     71,    197 },
-            {  143,     71,    198 },
-            {  143,     71,    203 },
-            {  143,     71,    204 },
-            {  143,     71,    205 },
-            {  143,     71,    206 },
-            {  143,     71,    207 },
-            {  143,     71,    208 },
-            {  143,     71,    209 },
-            {  143,     71,    210 },
-            {  143,     71,    211 },
-            {  143,     71,    212 },
-            {  143,     70,    213 },
-            {  143,     70,    214 },
-            {  143,     70,    215 },
-            {  143,     70,    216 },
-            {  143,     70,    217 },
-            {  143,     70,    218 },
-            {  144,     72,    194 },
-            {  144,     71,    195 },
-            {  144,     71,    196 },
-            {  144,     71,    197 },
-            {  144,     72,    198 },
-            {  144,     72,    199 },
-            {  144,     72,    200 },
-            {  144,     72,    201 },
-            {  144,     72,    202 },
-            {  144,     72,    203 },
-            {  144,     72,    204 },
-            {  144,     71,    206 },
-            {  144,     71,    207 },
-            {  144,     71,    208 },
-            {  144,     71,    209 },
-            {  144,     71,    210 },
-            {  144,     71,    211 },
-            {  144,     71,    212 },
-            {  144,     71,    213 },
-            {  144,     70,    214 },
-            {  144,     70,    215 },
-            {  144,     70,    216 },
-            {  144,     70,    217 },
-            {  144,     70,    218 },
-            {  145,     72,    194 },
-            {  145,     72,    195 },
-            {  145,     72,    196 },
-            {  145,     72,    197 },
-            {  145,     72,    198 },
-            {  145,     72,    199 },
-            {  145,     72,    200 },
-            {  145,     72,    201 },
-            {  145,     72,    202 },
-            {  145,     72,    203 },
-            {  145,     72,    204 },
-            {  145,     72,    205 },
-            {  145,     72,    206 },
-            {  145,     72,    207 },
-            {  145,     71,    208 },
-            {  145,     71,    209 },
-            {  145,     71,    210 },
-            {  145,     71,    211 },
-            {  145,     71,    212 },
-            {  145,     71,    213 },
-            {  145,     71,    214 },
-            {  145,     71,    215 },
-            {  145,     70,    216 },
-    };
 
     static final int RADIUS = 1;
 
@@ -197,13 +112,19 @@ public class Main {
             glLightfv(GL_LIGHT0, GL_POSITION, temp1);
 
             // draw reference overlay
-            for (int i = 0; i < referenceBlocks.length; i++) {
+            int[][] targetTerrain = TreeSeedTerrainChecker.targetTerrain;
+            glPushMatrix();
+            glTranslatef(TreeSeedTerrainChecker.CHUNK_B_X * 16, 0, TreeSeedTerrainChecker.CHUNK_B_Z * 16);
+            for (int i = 0; i < targetTerrain.length; i++) {
                 glPushMatrix();
-                glTranslatef(referenceBlocks[i][0], referenceBlocks[i][1], referenceBlocks[i][2]);
+                glTranslatef(targetTerrain[i][0], targetTerrain[i][1], targetTerrain[i][2]);
+                glTranslatef(-0.005f, -0.005f, -0.005f);
+                glScalef(1.01f, 1.01f, 1.01f);
                 glColor3f(0.677F, 0.243F, 0.243F);
                 Block.drawCube();
                 glPopMatrix();
             }
+            glPopMatrix();
 
             // draw chunks
             glDisable(GL_LIGHTING);
@@ -258,20 +179,20 @@ public class Main {
         pos.y = 64;
 
         // shot p
-        pos.x = 147.13F;
-        pos.y = 80.36F;
-        pos.z = 206.06F;
-
-        yaw = -268.95F;
-        pitch = 47.55F;
+//        pos.x = 147.13F;
+//        pos.y = 80.36F;
+//        pos.z = 206.06F;
+//
+//        yaw = -268.95F;
+//        pitch = 47.55F;
 
         // seed 5
-//        pos.x = -12.10F;
-//        pos.y = 83.53F;
-//        pos.z = -10.63F;
-//
-//        yaw = -395.34F;
-//        pitch = 27.75F;
+        pos.x = -12.10F;
+        pos.y = 83.53F;
+        pos.z = -10.63F;
+
+        yaw = -395.34F;
+        pitch = 27.75F;
     }
 
     public static void handleMouse(Display display) {

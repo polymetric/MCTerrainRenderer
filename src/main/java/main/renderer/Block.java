@@ -100,18 +100,19 @@ public class Block {
         int height = 1;
         int depth = 1;
         glBegin(GL_QUADS);
+        // face Xa
         glNormal3f( 0,      0,      -1    );
         glVertex3f(width, height, 0    );
-        glVertex3f(0,     height, 0    );
-        glVertex3f(0,     0,      0    );
         glVertex3f(width, 0,      0    );
+        glVertex3f(0,     0,      0    );
+        glVertex3f(0,     height, 0    );
 
         // face Za
         glNormal3f(-1,      0,       0    );
         glVertex3f(0,     height, 0    );
-        glVertex3f(0,     height, depth);
-        glVertex3f(0,     0,      depth);
         glVertex3f(0,     0,      0    );
+        glVertex3f(0,     0,      depth);
+        glVertex3f(0,     height, depth);
 
         // face Xb
         glNormal3f( 0,      0,       1    );
