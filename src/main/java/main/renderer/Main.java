@@ -1,5 +1,6 @@
 package main.renderer;
 
+import main.b18.Blocks;
 import main.terrainchecker.TreeSeedTerrainChecker;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -58,7 +59,7 @@ public class Main {
 //        System.out.println(c.blockAt(15, 64, 15));
 
         // MAIN LOOP
-        while(!GLFW.glfwWindowShouldClose(display.getWindowID())) {
+        while (!GLFW.glfwWindowShouldClose(display.getWindowID())) {
             // tick
             glfwPollEvents();
             if (updateSeed) {
@@ -76,12 +77,24 @@ public class Main {
             vel.mul(0.90F);
 
             if (moveEnabled) {
-                if (isMovingFwd) { moveHorizAngle(yaw); }
-                if (isMovingBwd) { moveHorizAngle(yaw + 180); }
-                if (isMovingRight) { moveHorizAngle(yaw + 90); }
-                if (isMovingLeft) { moveHorizAngle(yaw - 90); }
-                if (isMovingUp) { vel.y += speed; }
-                if (isMovingDown) { vel.y -= speed; }
+                if (isMovingFwd) {
+                    moveHorizAngle(yaw);
+                }
+                if (isMovingBwd) {
+                    moveHorizAngle(yaw + 180);
+                }
+                if (isMovingRight) {
+                    moveHorizAngle(yaw + 90);
+                }
+                if (isMovingLeft) {
+                    moveHorizAngle(yaw - 90);
+                }
+                if (isMovingUp) {
+                    vel.y += speed;
+                }
+                if (isMovingDown) {
+                    vel.y -= speed;
+                }
             }
 
             // clear buffer
@@ -94,7 +107,7 @@ public class Main {
             // camera
             glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
-            Matrix4f projectionMatrix = new Matrix4f().perspective(77, (float)display.getWidth()/display.getHeight(), .1F, 1000);
+            Matrix4f projectionMatrix = new Matrix4f().perspective(77, (float) display.getWidth() / display.getHeight(), .1F, 1000);
             float[] projectionMatrixf = new float[16];
             projectionMatrix.get(projectionMatrixf);
             glLoadMatrixf(projectionMatrixf);
@@ -108,19 +121,26 @@ public class Main {
             glEnable(GL_LIGHTING);
             glEnable(GL_COLOR_MATERIAL);
             glEnable(GL_LIGHT0);
-            float[] temp1 = { .5f, 1, .25f, 0 };
+            float[] temp1 = {.5f, 1, .25f, 0};
             glLightfv(GL_LIGHT0, GL_POSITION, temp1);
 
             // draw reference overlay
             int[][] targetTerrain = TreeSeedTerrainChecker.targetTerrain;
+            int chunkX = TreeSeedTerrainChecker.CHUNK_B_X;
+            int chunkZ = TreeSeedTerrainChecker.CHUNK_B_Z;
             glPushMatrix();
-            glTranslatef(TreeSeedTerrainChecker.CHUNK_B_X * 16, 0, TreeSeedTerrainChecker.CHUNK_B_Z * 16);
+            glTranslatef(chunkX * 16, 0, chunkZ * 16);
             for (int i = 0; i < targetTerrain.length; i++) {
                 glPushMatrix();
                 glTranslatef(targetTerrain[i][0], targetTerrain[i][1], targetTerrain[i][2]);
                 glTranslatef(-0.005f, -0.005f, -0.005f);
                 glScalef(1.01f, 1.01f, 1.01f);
-                glColor3f(0.677F, 0.243F, 0.243F);
+                if (level.blockAt(targetTerrain[i][0] + chunkX * 16, targetTerrain[i][1], targetTerrain[i][2] + chunkZ * 16) != 0
+                        && level.blockAt(targetTerrain[i][0] + chunkX * 16, targetTerrain[i][1] + 1, targetTerrain[i][2] + chunkZ * 16) == 0) {
+                    glColor3f(0.243F, 0.677F, 0.243F);
+                } else {
+                    glColor3f(0.677F, 0.243F, 0.243F);
+                }
                 Block.drawCube();
                 glPopMatrix();
             }
@@ -179,20 +199,20 @@ public class Main {
         pos.y = 64;
 
         // shot p
-//        pos.x = 147.13F;
-//        pos.y = 80.36F;
-//        pos.z = 206.06F;
-//
-//        yaw = -268.95F;
-//        pitch = 47.55F;
+        pos.x = 147.13F;
+        pos.y = 80.36F;
+        pos.z = 206.06F;
+
+        yaw = -268.95F;
+        pitch = 47.55F;
 
         // seed 5
-        pos.x = -12.10F;
-        pos.y = 83.53F;
-        pos.z = -10.63F;
-
-        yaw = -395.34F;
-        pitch = 27.75F;
+//        pos.x = -12.10F;
+//        pos.y = 83.53F;
+//        pos.z = -10.63F;
+//
+//        yaw = -395.34F;
+//        pitch = 27.75F;
     }
 
     public static void handleMouse(Display display) {
