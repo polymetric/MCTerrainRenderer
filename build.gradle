@@ -26,6 +26,8 @@ switch (org.gradle.internal.os.OperatingSystem.current()) {
 repositories {
     jcenter()
     mavenCentral()
+    maven { url "https://jitpack.io" }
+    maven { url "https://maven.latticg.com/" }
 }
 
 dependencies {
@@ -62,6 +64,11 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-par::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
     if (lwjglNatives == "natives-macos") runtimeOnly "org.lwjgl:lwjgl-vulkan::$lwjglNatives"
+
+    implementation 'com.github.KaptainWutax:SEED:master-SNAPSHOT'
+    implementation 'com.github.KaptainWutax:SEED:master-SNAPSHOT:sources'
+    implementation 'com.seedfinding:latticg:1.04@jar'
+    implementation 'com.seedfinding:latticg:1.04:sources'
 }
 
 application {
