@@ -18,22 +18,101 @@ public class Main {
 //    static final long SEED = 3257840388504953787L;
 //    static final long SEED = 5L;
 
-    static final int RADIUS = 12;
+    static final int[][] referenceBlocks = {
+            {  142,     71,    195 },
+            {  142,     71,    196 },
+            {  142,     71,    197 },
+            {  142,     71,    203 },
+            {  142,     71,    204 },
+            {  142,     71,    205 },
+            {  142,     71,    206 },
+            {  142,     71,    207 },
+            {  142,     71,    208 },
+            {  142,     71,    209 },
+            {  142,     70,    210 },
+            {  142,     70,    211 },
+            {  142,     70,    212 },
+            {  142,     70,    213 },
+            {  142,     70,    214 },
+            {  143,     71,    194 },
+            {  143,     71,    195 },
+            {  143,     71,    196 },
+            {  143,     71,    197 },
+            {  143,     71,    198 },
+            {  143,     71,    203 },
+            {  143,     71,    204 },
+            {  143,     71,    205 },
+            {  143,     71,    206 },
+            {  143,     71,    207 },
+            {  143,     71,    208 },
+            {  143,     71,    209 },
+            {  143,     71,    210 },
+            {  143,     71,    211 },
+            {  143,     71,    212 },
+            {  143,     70,    213 },
+            {  143,     70,    214 },
+            {  143,     70,    215 },
+            {  143,     70,    216 },
+            {  143,     70,    217 },
+            {  143,     70,    218 },
+            {  144,     72,    194 },
+            {  144,     71,    195 },
+            {  144,     71,    196 },
+            {  144,     71,    197 },
+            {  144,     72,    198 },
+            {  144,     72,    199 },
+            {  144,     72,    200 },
+            {  144,     72,    201 },
+            {  144,     72,    202 },
+            {  144,     72,    203 },
+            {  144,     72,    204 },
+            {  144,     71,    206 },
+            {  144,     71,    207 },
+            {  144,     71,    208 },
+            {  144,     71,    209 },
+            {  144,     71,    210 },
+            {  144,     71,    211 },
+            {  144,     71,    212 },
+            {  144,     71,    213 },
+            {  144,     70,    214 },
+            {  144,     70,    215 },
+            {  144,     70,    216 },
+            {  144,     70,    217 },
+            {  144,     70,    218 },
+            {  145,     72,    194 },
+            {  145,     72,    195 },
+            {  145,     72,    196 },
+            {  145,     72,    197 },
+            {  145,     72,    198 },
+            {  145,     72,    199 },
+            {  145,     72,    200 },
+            {  145,     72,    201 },
+            {  145,     72,    202 },
+            {  145,     72,    203 },
+            {  145,     72,    204 },
+            {  145,     72,    205 },
+            {  145,     72,    206 },
+            {  145,     72,    207 },
+            {  145,     71,    208 },
+            {  145,     71,    209 },
+            {  145,     71,    210 },
+            {  145,     71,    211 },
+            {  145,     71,    212 },
+            {  145,     71,    213 },
+            {  145,     71,    214 },
+            {  145,     71,    215 },
+            {  145,     70,    216 },
+    };
+
+    static final int RADIUS = 1;
 
     public static void main(String[] args) throws Exception {
-        Display display = new Display(1600, 864, "gamers");
+        Display display = new Display(1434, 840, "gamers");
         display.createWindow(new KeyHandler());
 
         // set camera to sea level
-        pos.y = 64 + 1.62F;
+        resetPosition();
 
-//        pos.x = 147.13F;
-//        pos.y = 80.36F;
-//        pos.z = 206.06F;
-//
-//        yaw = -268.95F;
-//        pitch = 47.55F;
-//
 //        mouseEnabled = false;
 //        moveEnabled = false;
 
@@ -100,17 +179,34 @@ public class Main {
             // camera
             glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
-            Matrix4f projectionMatrix = new Matrix4f().perspective(70, (float)display.getWidth()/display.getHeight(), .1F, 1000);
+            Matrix4f projectionMatrix = new Matrix4f().perspective(77, (float)display.getWidth()/display.getHeight(), .1F, 1000);
             float[] projectionMatrixf = new float[16];
             projectionMatrix.get(projectionMatrixf);
             glLoadMatrixf(projectionMatrixf);
+
+            glTranslatef(0, 0, -0.1f);
             glRotatef(pitch, 1.0f, 0.0f, 0.0f);
-            glRotatef(yaw, 0.0f, 1.0f, 0.0f);
-            glTranslatef(-pos.x, -pos.y, -pos.z);
+            glRotatef(yaw - 180, 0.0f, 1.0f, 0.0f);
+            glTranslatef(-pos.x, -pos.y - 1.62F, -pos.z);
 
             // lighting
+            glEnable(GL_LIGHTING);
+            glEnable(GL_COLOR_MATERIAL);
+            glEnable(GL_LIGHT0);
+            float[] temp1 = { .5f, 1, .25f, 0 };
+            glLightfv(GL_LIGHT0, GL_POSITION, temp1);
 
-            // draw
+            // draw reference overlay
+            for (int i = 0; i < referenceBlocks.length; i++) {
+                glPushMatrix();
+                glTranslatef(referenceBlocks[i][0], referenceBlocks[i][1], referenceBlocks[i][2]);
+                glColor3f(0.677F, 0.243F, 0.243F);
+                Block.drawCube();
+                glPopMatrix();
+            }
+
+            // draw chunks
+            glDisable(GL_LIGHTING);
             glMatrixMode(GL_MODELVIEW);
             level.render();
 
@@ -156,6 +252,28 @@ public class Main {
     public static boolean mouseEnabled = true;
     public static boolean moveEnabled = true;
 
+    public static void resetPosition() {
+        vel.mul(0);
+
+        pos.y = 64;
+
+        // shot p
+        pos.x = 147.13F;
+        pos.y = 80.36F;
+        pos.z = 206.06F;
+
+        yaw = -268.95F;
+        pitch = 47.55F;
+
+        // seed 5
+//        pos.x = -12.10F;
+//        pos.y = 83.53F;
+//        pos.z = -10.63F;
+//
+//        yaw = -395.34F;
+//        pitch = 27.75F;
+    }
+
     public static void handleMouse(Display display) {
         if (paused || !mouseEnabled) {
             display.enableCursor();
@@ -190,7 +308,7 @@ public class Main {
     }
 
     public static void moveHorizAngle(double angle) {
-        angle = angle - 90;
+        angle = angle + 90;
         vel.x += speed * Math.cos(Math.toRadians(angle));
         vel.z += speed * Math.sin(Math.toRadians(angle));
     }
@@ -205,12 +323,12 @@ public class Main {
 
     public static void nextSeed() {
         seedIndex++;
-        System.out.println(seedIndex);
         updateSeed = true;
     }
 
     public static void reloadChunks() {
         level.clear();
+        System.out.printf("seedIndex: %5d\n", seedIndex % seeds.length);
         System.out.printf("loading seed %15d\n", seeds[seedIndex % seeds.length]);
         System.out.printf("reloading chunks centered around %4d %4d\n", floorDiv((int) pos.x, 16), floorDiv((int) pos.z, 16));
         genChunksForRenderer(level, seeds[seedIndex % seeds.length], RADIUS, floorDiv((int) pos.x, 16), floorDiv((int) pos.z, 16));

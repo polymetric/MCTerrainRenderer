@@ -20,5 +20,6 @@ public class KeyHandler implements GLFWKeyCallbackI {
         if (key == GLFW_KEY_LEFT && action == GLFW_RELEASE ) { Main.prevSeed(); }
         if (key == GLFW_KEY_RIGHT && action == GLFW_RELEASE ) { Main.nextSeed(); }
         if (key == GLFW_KEY_R && action == GLFW_RELEASE ) { Main.reloadChunks(); }
+        if (key == GLFW_KEY_G && action == GLFW_RELEASE ) { Main.resetPosition(); }
     }
 }
