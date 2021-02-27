@@ -26,9 +26,9 @@ public class TreeSeedTerrainChecker {
 //    public static final int CHUNK_B_Z = -1;
 
     public static void main(String[] args) throws Exception {
-        final int THREADS = 8;
+        final int THREADS = 12;
 
-        final String treeSeedsInPath = "treeseeds_shotp_2.txt";
+        final String treeSeedsInPath = "treeseeds_shotp_13.txt";
         final String seedsOutPath = "worldseeds_shotp_terrainfiltered.txt";
 
         final LCG rev1 = LCG.JAVA.combine(-1);
@@ -43,6 +43,8 @@ public class TreeSeedTerrainChecker {
         System.out.printf("loaded %d tree seeds\n", treeSeedsIn.length);
         System.out.println(5500 - 3760 + 220);
 
+        long timeStart = System.currentTimeMillis();
+
         for (int i = 0; i < treeSeedsIn.length; i++) {
             final long initialSeed = LCG.JAVA.combine(-3760 - 220).nextSeed(Long.parseLong(treeSeedsIn[i].trim()));
             final int threadId = i;
@@ -51,32 +53,34 @@ public class TreeSeedTerrainChecker {
                 long seed = initialSeed;
                 for (int dfz = 0; dfz < 5500 - 3760 + 220; dfz++) {
                     seed = LCG.JAVA.nextSeed(seed);
-                    for (long worldSeed : ChunkRandomReverser.reversePopulationSeed(seed ^ LCG.JAVA.multiplier, CHUNK_A_X, CHUNK_A_Z, MCVersion.v1_8)) {
-                        WorldChunkManager worldChunkManager = new WorldChunkManager(worldSeed);
-                        ChunkProviderGenerate chunkProvider = new ChunkProviderGenerate(worldSeed, worldChunkManager);
-                        byte[] blocks = chunkProvider.provideChunk(CHUNK_B_X, CHUNK_B_Z);
+                    for (long worldSeed48 : ChunkRandomReverser.reversePopulationSeed(seed ^ LCG.JAVA.multiplier, CHUNK_A_X, CHUNK_A_Z, MCVersion.v1_8)) {
+                        for (long worldSeed : Utils.getValidSeeds(worldSeed48)) {
+                            WorldChunkManager worldChunkManager = new WorldChunkManager(worldSeed);
+                            ChunkProviderGenerate chunkProvider = new ChunkProviderGenerate(worldSeed, worldChunkManager);
+                            byte[] blocks = chunkProvider.provideChunk(CHUNK_B_X, CHUNK_B_Z);
 
-                        int matches = 0;
-                        for (int j = 0; j < targetTerrain.length; j++) {
-                            int x = targetTerrain[j][0];
-                            int y = targetTerrain[j][1];
-                            int z = targetTerrain[j][2];
-                            if (blocks[Chunk.getIndexOf(x, y, z)] != 0
-                                    && blocks[Chunk.getIndexOf(x, y+1, z)] == 0
-                            ) {
-                                matches++;
+                            int matches = 0;
+                            for (int j = 0; j < targetTerrain.length; j++) {
+                                int x = targetTerrain[j][0];
+                                int y = targetTerrain[j][1];
+                                int z = targetTerrain[j][2];
+                                if (blocks[Chunk.getIndexOf(x, y, z)] != 0
+                                        && blocks[Chunk.getIndexOf(x, y + 1, z)] == 0
+                                ) {
+                                    matches++;
+                                }
                             }
-                        }
-                        if (matches >= targetTerrain.length * 0.9) {
-                            try {
-                                seedsOut.write(String.format("%d\n", worldSeed));
-                                seedsOut.flush();
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            if (matches >= targetTerrain.length * 0.9) {
+                                try {
+                                    seedsOut.write(String.format("%d\n", worldSeed));
+                                    seedsOut.flush();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                results.getAndIncrement();
                             }
-                            results.getAndIncrement();
+                            seedsChecked.getAndIncrement();
                         }
-                        seedsChecked.getAndIncrement();
                     }
                 }
             });
@@ -114,7 +118,7 @@ public class TreeSeedTerrainChecker {
             }
         }
 
-        System.out.println("done");
+        System.out.printf("done in %ds", (System.currentTimeMillis() - timeStart) / 1000);
     }
 
     public static final int[][] targetTerrain = {

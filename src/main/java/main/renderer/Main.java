@@ -20,7 +20,7 @@ public class Main {
 //    static final long SEED = 3257840388504953787L;
 //    static final long SEED = 5L;
 
-    static final int RADIUS = 1;
+    static final int RADIUS = 2;
 
     public static void main(String[] args) throws Exception {
         Display display = new Display(1434, 840, "gamers");
