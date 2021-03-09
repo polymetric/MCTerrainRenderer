@@ -199,12 +199,12 @@ public class Main {
         pos.y = 64;
 
         // shot p
-        pos.x = 147.13F;
-        pos.y = 80.36F;
-        pos.z = 206.06F;
-
-        yaw = -268.95F;
-        pitch = 47.55F;
+//        pos.x = 147.13F;
+//        pos.y = 80.36F;
+//        pos.z = 206.06F;
+//
+//        yaw = -268.95F;
+//        pitch = 47.55F;
 
         // seed 5
 //        pos.x = -12.10F;
@@ -213,6 +213,14 @@ public class Main {
 //
 //        yaw = -395.34F;
 //        pitch = 27.75F;
+
+        // shot n
+        pos.x = -84.05F;
+        pos.y = 64.62F;
+        pos.z = 376.30F;
+
+        yaw = -235.57F;
+        pitch = -4.47F;
     }
 
     public static void handleMouse(Display display) {

@@ -41,6 +41,12 @@ public class Utils {
         return ((((0x5deece66dL * e + 11) % c) >> 16) << 32) + (int) (((0xbb20b4600a69L * e + 0x40942de6baL) % c) >> 16) == a;
     }
 
+    public static List<Long> getValidSeedsAndOriginal(long seed) {
+        List<Long> list = getValidSeeds(seed);
+        list.add(seed);
+        return list;
+    }
+
     public static List<Long> getValidSeeds(long seed) {
         ArrayList<Long> seeds = new ArrayList<>();
         for (long upper16 = 0; upper16 < 1 << 16; upper16++) {
